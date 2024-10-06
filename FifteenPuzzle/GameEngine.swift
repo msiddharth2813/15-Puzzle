@@ -2,7 +2,7 @@
 //  GameEngine.swift
 //  FifteenPuzzle
 //
-//  Created by mani on 9/3/24.
+//  Created by siddharth on 9/3/24.
 //
 import SwiftUI
 
