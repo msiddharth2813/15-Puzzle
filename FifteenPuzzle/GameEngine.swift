@@ -14,7 +14,7 @@ class GameEngine: ObservableObject {
     
     let padding: CGFloat = 20
             
-    @Published var locationMapping = [Int : CGPoint]()
+    var locationMapping = [Int : CGPoint]()
     
     @Published var buttonGridLocationMapping = [Int : CGPoint]()
 
@@ -48,7 +48,7 @@ class GameEngine: ObservableObject {
         {
             return true
         }
-        return true
+        return false
     }
     
     func updateScreenSize(size: CGSize) {
@@ -76,11 +76,13 @@ class GameEngine: ObservableObject {
             return false
         }
         
-        
-        
         // im checking where button can move
+        let canCheckRight = canCheckRightPosition(buttonTappedPos: buttonGridPostion)
+        let canCheckLeft = canCheckLeftPosition(buttonTappedPos: buttonGridPostion)
+        print("canCheckRightPosition\(canCheckRight)")
+        print("canCheckLeftPosition\(canCheckLeft)")
         print("buttonGridPostion\(buttonGridPostion)")
-        if buttonGridPostion + 1 == buttonGridPostionEmpty || buttonGridPostion - 1 == buttonGridPostionEmpty ||
+        if buttonGridPostion + 1 == buttonGridPostionEmpty && canCheckRight || buttonGridPostion - 1 == buttonGridPostionEmpty && canCheckLeft ||
             buttonGridPostion + 4 == buttonGridPostionEmpty || buttonGridPostion - 4 == buttonGridPostionEmpty
         {
             print("empty cell around")
@@ -124,7 +126,18 @@ class GameEngine: ObservableObject {
         return false
     }
     
-    
+    func canCheckRightPosition(buttonTappedPos: Int) -> Bool {
+        if buttonTappedPos == 4 || buttonTappedPos == 8 || buttonTappedPos == 12 || buttonTappedPos == 16 {
+            return false
+        }
+        return true
+    }
+    func canCheckLeftPosition(buttonTappedPos: Int) -> Bool {
+        if buttonTappedPos == 1 || buttonTappedPos == 5 || buttonTappedPos == 9 || buttonTappedPos == 13 {
+            return false
+        }
+        return true
+    }
     func updatePositionsMapping(size: CGSize) {
         let buttonWidth = (size.width - (2 * padding + 3 * gridSpacing)) / 4.0
         print("MANIII buttonWidth=\(buttonWidth)")
@@ -135,7 +148,8 @@ class GameEngine: ObservableObject {
         print("MANIII gridheight=\(gridheight)")
         
         var startX = padding + buttonWidth / 2.0
-        var startY: CGFloat = (size.height - gridheight) / 2.0
+        //var startY: CGFloat = (size.height - gridheight) / 2.0
+        var startY: CGFloat = 50//padding
         print("MANIII startY=\(startY)")
         locationMapping[1] = CGPoint(x: startX, y: startY)
         

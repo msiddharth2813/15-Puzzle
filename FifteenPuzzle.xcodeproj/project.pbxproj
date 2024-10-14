@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3C25718E2CA9E3AA000507EA /* sound_effect_1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C25718D2CA9E3AA000507EA /* sound_effect_1.wav */; };
+		3C2571CA2CB4CCAA000507EA /* MeshGradientColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2571C92CB4CCAA000507EA /* MeshGradientColors.swift */; };
 		3C3FA96B2C7C17F600FADE44 /* FifteenPuzzleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3FA96A2C7C17F600FADE44 /* FifteenPuzzleApp.swift */; };
 		3C3FA96D2C7C17F600FADE44 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3FA96C2C7C17F600FADE44 /* ContentView.swift */; };
 		3C3FA96F2C7C17F700FADE44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C3FA96E2C7C17F700FADE44 /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		3C25718D2CA9E3AA000507EA /* sound_effect_1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound_effect_1.wav; sourceTree = "<group>"; };
+		3C2571C92CB4CCAA000507EA /* MeshGradientColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshGradientColors.swift; sourceTree = "<group>"; };
 		3C3FA9672C7C17F600FADE44 /* FifteenPuzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FifteenPuzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C3FA96A2C7C17F600FADE44 /* FifteenPuzzleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FifteenPuzzleApp.swift; sourceTree = "<group>"; };
 		3C3FA96C2C7C17F600FADE44 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				3C3FA9CA2C88002800FADE44 /* GameEngine.swift */,
 				3C3FA96A2C7C17F600FADE44 /* FifteenPuzzleApp.swift */,
 				3C3FA96C2C7C17F600FADE44 /* ContentView.swift */,
+				3C2571C92CB4CCAA000507EA /* MeshGradientColors.swift */,
 				3C3FA96E2C7C17F700FADE44 /* Assets.xcassets */,
 				3C3FA9702C7C17F700FADE44 /* Preview Content */,
 			);
@@ -272,6 +275,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C2571CA2CB4CCAA000507EA /* MeshGradientColors.swift in Sources */,
 				3C3FA9CB2C88002B00FADE44 /* GameEngine.swift in Sources */,
 				3C3FA96D2C7C17F600FADE44 /* ContentView.swift in Sources */,
 				3C3FA96B2C7C17F600FADE44 /* FifteenPuzzleApp.swift in Sources */,
