@@ -26,18 +26,18 @@ struct ContentView: View {
                         .frame(width: 100, height: 100)
                         .position(self.engine.fillRectanglesPosition[button] ?? .zero)
                 }
-                ForEach(1...4, id: \.self) { button in
-                    if button == 4 {
+                ForEach(1...4, id: \.self) { buttonNumber in
+                    if buttonNumber == 4 {
                         EmptyView()
                     } else {
                         Button {
                             
                         } label: {
-                            Text("\(button)")
+                            Text("\(buttonNumber)")
                                 .frame(width: 100, height: 100)
                         }
                         .background(Color.green)
-                        .position(self.engine.buttonGridPosition[button] ?? .zero)
+                        .position(self.engine.buttonGridPosition[buttonNumber] ?? .zero)
                     }
                 }
             }.frame(height: 400)

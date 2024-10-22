@@ -43,6 +43,8 @@ struct MeshGradientColors {
     
     static var pinkTheme = MeshGradientColors.init(color1: .pink.mix(with: .yellow, by: 0.5), color2: .pink.mix(with: .yellow, by: 0.5), color3: .pink.mix(with: .yellow, by: 0.5), color4: .pink.mix(with: .purple, by: 0.2), color5: .pink.mix(with: .purple, by: 0.2), color6: .pink.mix(with: .purple, by: 0.2), color7: .purple, color8: .purple, color9: .purple, color10: .indigo, color11: .indigo, color12: .indigo)
     
+    static var yellowOrange = MeshGradientColors.init(color1: .yellow, color2: .yellow, color3: .yellow, color4: .orange, color5: .orange, color6: .orange, color7: .purple, color8: .purple, color9: .purple, color10: .pink, color11: .pink, color12: .pink)
+    
     static func randomGradient() -> MeshGradientColors {
         randomTheme += 1
 
@@ -60,7 +62,9 @@ struct MeshGradientColors {
             return .greenRed
         } else if randomTheme == 7 {
             return .pinkTheme
-        }
+        } else if randomTheme == 8 {
+            return .yellowOrange
+       }
         else {
             randomTheme = 0
             return randomGradient()

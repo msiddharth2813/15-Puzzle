@@ -10,33 +10,77 @@ class GameEngine: ObservableObject {
     
     let gridSpacing: CGFloat = 8
     
-    var numbers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-    
     let padding: CGFloat = 20
-            
-    var locationMapping = [Int : CGPoint]()
+
+    var gridNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     
-    @Published var buttonGridLocationMapping = [Int : CGPoint]()
+    var fillRectanglePositions = [Int : CGPoint]()
+    
+    @Published 
+    var buttonGridPositions = [Int : CGPoint]()
 
     var buttonGridMap = [Int: Int]()
-    var buttonGridPostionEmpty = 1
+    
+    var emptyButtonGridPostion = 1
+    
+    let buttonRowMapping = [
+        1: [2, 3, 4],
+        2: [1, 3, 4],
+        3: [1, 2, 4],
+        4: [1, 2, 3],
+        
+        5: [6, 7, 8],
+        6: [5, 7, 8],
+        7: [5, 6, 8],
+        8: [5, 6, 7],
+        
+        9: [10, 11, 12],
+        10: [9, 11, 12],
+        11: [9, 10, 12],
+        12: [11, 9, 10],
+        
+        13: [14, 15, 16],
+        14: [13, 15, 16],
+        15: [14, 13, 16],
+        16: [14, 15, 13],
+    ]
+    
+    let buttonCollumnMapping = [
+        1: [5, 9, 13],
+        2: [6, 10, 14],
+        3: [11, 7, 15],
+        4: [8, 12, 16],
+        
+        5: [1, 9, 13],
+        6: [10, 2, 14],
+        7: [3, 11, 15],
+        8: [4, 12, 16],
+        
+        9: [13, 1, 5],
+        10: [14, 6, 2],
+        11: [15, 3, 7],
+        12: [16, 8, 4],
+        
+        13: [9, 5, 1],
+        14: [10, 2, 6],
+        15: [11, 7, 3],
+        16: [12, 8, 4],
+    ]
+    
     
     init(size: CGSize) {
         updatePositionsMapping(size: size)
     }
     
     func randomNumberGenerator() {
-        numbers.shuffle()
+        gridNumbers.shuffle()
         for position in 1...16 {
-            buttonGridMap[position] = numbers[position - 1]
-            if numbers[position - 1] == 16 {
-                buttonGridPostionEmpty = position
+            buttonGridMap[position] = gridNumbers[position - 1]
+            if gridNumbers[position - 1] == 16 {
+                emptyButtonGridPostion = position
             }
-            buttonGridLocationMapping[numbers[position - 1]] = locationMapping[position]
+            buttonGridPositions[gridNumbers[position - 1]] = fillRectanglePositions[position]
         }
-        print("buttonGridLocationMapping\(buttonGridLocationMapping)")
-        print(("buttongridmap\(buttonGridMap)"))
-        print(("buttonGridPostionEmpty\(buttonGridPostionEmpty)"))
     }
 
    
@@ -57,150 +101,142 @@ class GameEngine: ObservableObject {
     }
     
     func buttonTapped(buttonNumber: Int) -> Bool {
-        print("buttonGridMap \(buttonGridMap)")
-
         var buttonGridPostion = 1
         
         for (key, value) in buttonGridMap {
             if value == buttonNumber {
                 buttonGridPostion = key
-                print("key Match = \(key)")
                 break
             }
         }
-        print("buttonGridPostion \(buttonGridPostion)")
-        
-        print("buttonGridPostionEmpty \(buttonGridPostionEmpty)")
         
         if buttonNumber < 0 || buttonNumber > 16 {
             return false
         }
         
-        // im checking where button can move
-        let canCheckRight = canCheckRightPosition(buttonTappedPos: buttonGridPostion)
-        let canCheckLeft = canCheckLeftPosition(buttonTappedPos: buttonGridPostion)
-        print("canCheckRightPosition\(canCheckRight)")
-        print("canCheckLeftPosition\(canCheckLeft)")
-        print("buttonGridPostion\(buttonGridPostion)")
-        if buttonGridPostion + 1 == buttonGridPostionEmpty && canCheckRight || buttonGridPostion - 1 == buttonGridPostionEmpty && canCheckLeft ||
-            buttonGridPostion + 4 == buttonGridPostionEmpty || buttonGridPostion - 4 == buttonGridPostionEmpty
-        {
-            print("empty cell around")
-            
-            let buttonPosition = buttonGridLocationMapping[buttonNumber]
-            buttonGridLocationMapping[buttonNumber] = buttonGridLocationMapping[16] ?? .zero
-            buttonGridLocationMapping[16] = buttonPosition
-            
-            // Swap the button position in gridmap
-            let gridPos = buttonGridMap[buttonGridPostion]
-            buttonGridMap[buttonGridPostion] = 16
-            buttonGridMap[buttonGridPostionEmpty] = gridPos
-            
-            buttonGridPostionEmpty = buttonGridPostion
-            
-            return true
+        let rows = buttonRowMapping[buttonGridPostion] ?? []
+        let columns = buttonCollumnMapping[buttonGridPostion] ?? []
+
+        var buttonPositionsToMove = [Int]()
+        var emptyButtonGridPostion = emptyButtonGridPostion
+        
+        if rows.contains(emptyButtonGridPostion) {
+            if emptyButtonGridPostion < buttonGridPostion {
+                while emptyButtonGridPostion < buttonGridPostion {
+                    emptyButtonGridPostion += 1
+                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                }
+            } else {
+                while emptyButtonGridPostion > buttonGridPostion {
+                    emptyButtonGridPostion -= 1
+                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                }
+            }
+        } else if columns.contains(emptyButtonGridPostion) {
+            if emptyButtonGridPostion < buttonGridPostion {
+                while emptyButtonGridPostion < buttonGridPostion {
+                    emptyButtonGridPostion += 4
+                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                }
+            } else {
+                while emptyButtonGridPostion > buttonGridPostion {
+                    emptyButtonGridPostion -= 4
+                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                }
+            }
         }
-        
-        print("currentEmptyPos \(buttonGridPostionEmpty)")
-        print("buttonGridMap \(buttonGridMap)")
-        
-        print("game finished\(gameFinished())")
-        
-//        if buttonGridPostion + 8 == buttonGridPostionEmpty || buttonGridPostion + 12 == buttonGridPostionEmpty || buttonGridPostion + 2 == buttonGridPostionEmpty || buttonGridPostion + 3 == buttonGridPostionEmpty || buttonGridPostion - 8 == buttonGridPostionEmpty || buttonGridPostion - 12 == buttonGridPostionEmpty || buttonGridPostion - 2 == buttonGridPostionEmpty || buttonGridPostion - 3 == buttonGridPostionEmpty{
-//            
-//            print("emptyPOS\(buttonGridPostionEmpty)")
-//            
-//            let buttonPosition = buttonGridLocationMapping[buttonNumber]
-//            buttonGridLocationMapping[buttonNumber] = buttonGridLocationMapping[16] ?? .zero
-//            buttonGridLocationMapping[16] = buttonPosition
-//            
-//            // Swap the button position in gridmap
-//            let gridPos = buttonGridMap[buttonGridPostion]
-//            buttonGridMap[buttonGridPostion] = 16
-//            buttonGridMap[buttonGridPostionEmpty] = gridPos
-//            
-//            
-//            buttonGridPostionEmpty = buttonGridPostion
-//            
-//        }
-        return false
+        print("buttonPositionsToMove = \(buttonPositionsToMove)")
+        if !buttonPositionsToMove.isEmpty {
+            for indexToMove in buttonPositionsToMove {
+                if let buttonNumber = buttonGridMap[indexToMove] {
+                    buttonSwap(buttonNumber: buttonNumber)
+                }
+            }
+            return true
+        } else {
+            // No swap
+            return false
+        }
     }
     
-    func canCheckRightPosition(buttonTappedPos: Int) -> Bool {
-        if buttonTappedPos == 4 || buttonTappedPos == 8 || buttonTappedPos == 12 || buttonTappedPos == 16 {
-            return false
+    func buttonSwap(buttonNumber: Int) {
+        
+        var buttonGridPostion = 1
+        
+        for (key, value) in buttonGridMap {
+            if value == buttonNumber {
+                buttonGridPostion = key
+                break
+            }
         }
-        return true
+
+        let buttonPosition = buttonGridPositions[buttonNumber]
+        buttonGridPositions[buttonNumber] = buttonGridPositions[16] ?? .zero
+        buttonGridPositions[16] = buttonPosition
+        
+        // Swap the button position in gridmap
+        let gridPos = buttonGridMap[buttonGridPostion]
+        buttonGridMap[buttonGridPostion] = 16
+        buttonGridMap[emptyButtonGridPostion] = gridPos
+        
+        emptyButtonGridPostion = buttonGridPostion
     }
-    func canCheckLeftPosition(buttonTappedPos: Int) -> Bool {
-        if buttonTappedPos == 1 || buttonTappedPos == 5 || buttonTappedPos == 9 || buttonTappedPos == 13 {
-            return false
-        }
-        return true
-    }
+    
     func updatePositionsMapping(size: CGSize) {
         let buttonWidth = (size.width - (2 * padding + 3 * gridSpacing)) / 4.0
-        print("MANIII buttonWidth=\(buttonWidth)")
-        print("MANIII size=\(size)")
-        
         let gridheight = 4 * buttonWidth + 3 * gridSpacing
         
-        print("MANIII gridheight=\(gridheight)")
-        
         var startX = padding + buttonWidth / 2.0
-        //var startY: CGFloat = (size.height - gridheight) / 2.0
-        var startY: CGFloat = 50//padding
-        print("MANIII startY=\(startY)")
-        locationMapping[1] = CGPoint(x: startX, y: startY)
+        var startY: CGFloat = 50 //padding top
+
+        fillRectanglePositions[1] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[2] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[2] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[3] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[3] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[4] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[4] = CGPoint(x: startX, y: startY)
         
         startX = padding + buttonWidth / 2.0
         startY = startY + buttonWidth + gridSpacing
-        locationMapping[5] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[5] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[6] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[6] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[7] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[7] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[8] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[8] = CGPoint(x: startX, y: startY)
         
         startX = padding + buttonWidth / 2.0
         startY = startY + buttonWidth + gridSpacing
-        locationMapping[9] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[9] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[10] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[10] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[11] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[11] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[12] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[12] = CGPoint(x: startX, y: startY)
         
         startX = padding + buttonWidth / 2.0
         startY = startY + buttonWidth + gridSpacing
-        locationMapping[13] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[13] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[14] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[14] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[15] = CGPoint(x: startX, y: startY)
+        fillRectanglePositions[15] = CGPoint(x: startX, y: startY)
         
         startX = startX + buttonWidth + gridSpacing
-        locationMapping[16] = CGPoint(x: startX, y: startY)
-        
-        print("locationMapping\(locationMapping)")                
+        fillRectanglePositions[16] = CGPoint(x: startX, y: startY)        
     }
 }

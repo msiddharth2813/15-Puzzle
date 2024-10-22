@@ -9,29 +9,29 @@ import SwiftUI
 import AVKit
 import AVFoundation
 
-var player: AVAudioPlayer!
-
 struct ContentView: View {
-    @State var startDate = Date.now
-    var futureDate = Date.now.addingTimeInterval(3000)
+
     let totalCellCount = 16
     let gridSpacing: CGFloat = 8
-    @State var cellWidth: CGFloat = 50
+
+    @Environment(\.scenePhase) var scenePhase
+
+    @State var startDate = Date.now
+    @State var cellWidth: CGFloat = 0
     @State var affect = 0
-    @State var scale:CGFloat = 1
+    @State var scale: CGFloat = 1
     @State var currentTimerSecond = 0
     @State var showFirstImage = true
     @State var timerInString = ""
     @State var hidePlayButtonView = false
-    @State private var showingAlert = false
+    @State var showingAlert = false
     @State var playStarted = false
-    @State var currentTheme:MeshGradientColors = .randomGradient()
-    @Environment(\.scenePhase) var scenePhase
-    @ObservedObject var gameEngine = GameEngine(size: CGSize.zero)
+    @State var currentTheme: MeshGradientColors = .randomGradient()
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var audioPlayer: AVAudioPlayer?
 
-    var audioPlayer: AVAudioPlayer?
-    
+    @ObservedObject var gameEngine = GameEngine(size: CGSize.zero)
+        
     var body: some View {
         GeometryReader { proxy in
             ZStack {
@@ -108,7 +108,7 @@ struct ContentView: View {
                                 .fill(Color.black.opacity(0.1))
                                 .cornerRadius(15)
                                 .frame(width: cellWidth, height: cellWidth)
-                                .position(gameEngine.locationMapping[position] ?? .zero)
+                                .position(gameEngine.fillRectanglePositions[position] ?? .zero)
                         }
                         ForEach(1...totalCellCount, id: \.self) { position in
                             let cell = position
@@ -127,7 +127,7 @@ struct ContentView: View {
                                             }
                                             let isButtonSwapped = gameEngine.buttonTapped(buttonNumber: cell)
                                             if isButtonSwapped == true {
-                                                player?.play()
+                                                audioPlayer?.play()
                                             }
                                             let gameWon = gameEngine.gameFinished()
                                             if gameWon == true {
@@ -168,7 +168,7 @@ struct ContentView: View {
                                     .animation(.easeOut, value: scale)
                                     .cornerRadius(15)
                                     .frame(width: cellWidth, height: cellWidth)
-                                    .position(gameEngine.buttonGridLocationMapping[position] ?? .zero)
+                                    .position(gameEngine.buttonGridPositions[position] ?? .zero)
                                     .sensoryFeedback(.impact, trigger: affect)
                                 }
                             }
@@ -208,11 +208,11 @@ struct ContentView: View {
                         guard playStarted else {
                             return
                         }
-                        affect += 1
-                        currentTheme = MeshGradientColors.randomGradient()
                         guard !hidePlayButtonView else {
                             return
                         }
+                        affect += 1
+                        currentTheme = MeshGradientColors.randomGradient()
                         playStarted = false
                         gameEngine.randomNumberGenerator()
                         currentTimerSecond = 0
@@ -255,7 +255,7 @@ struct ContentView: View {
                 timer.upstream.connect().cancel()
             }
          }
-            .onAppear {
+        .onAppear {
                 print("MANIII  proxy=\(proxy.size)")
                 let duration = Duration.seconds(currentTimerSecond)
                 let format = duration.formatted(
@@ -267,8 +267,8 @@ struct ContentView: View {
                 
                 if let url {
                     do {
-                        if player == nil {
-                            player = try AVAudioPlayer(contentsOf: url)
+                        if audioPlayer == nil {
+                            audioPlayer = try AVAudioPlayer(contentsOf: url)
                         }
                     } catch {
                         
@@ -282,6 +282,72 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}
+//struct ContentView: View {
+//
+//    let totalCellCount = 16
+//    let gridSpacing: CGFloat = 8
+//
+//    @Environment(\.scenePhase) var scenePhase
+//
+//    @State var startDate = Date.now
+//    @State var cellWidth: CGFloat = 0
+//    @State var affect = 0
+//    @State var scale: CGFloat = 1
+//    @State var currentTimerSecond = 0
+//    @State var showFirstImage = true
+//    @State var timerInString = ""
+//    @State var hidePlayButtonView = false
+//    @State var showingAlert = false
+//    @State var playStarted = false
+//    @State var currentTheme: MeshGradientColors = .randomGradient()
+//    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+//    @State var audioPlayer: AVAudioPlayer?
+//
+//    @ObservedObject var gameEngine = GameEngine(size: CGSize.zero)
+//        
+//    var body: some View {
+//        GeometryReader { proxy in
+//        ZStack {
+//            ForEach(1...totalCellCount, id: \.self) { position in
+//                Rectangle()
+//                    .fill(Color.black.opacity(0.1))
+//                    .cornerRadius(15)
+//                    .frame(width: cellWidth, height: cellWidth)
+//                    .position(gameEngine.fillRectanglePositions[position] ?? .zero)
+//            }
+//        }
+//        .padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0))
+//        .onAppear {
+//            let padding: CGFloat = (2 * 20) + (3 * gridSpacing)
+//            cellWidth = (proxy.size.width - padding)/4
+//            gameEngine.updateScreenSize(size: proxy.size)
+//        }
+//        .frame(width: proxy.size.width, height: 400)
+//        .onAppear {
+//                print("MANIII  proxy=\(proxy.size)")
+//                let duration = Duration.seconds(currentTimerSecond)
+//                let format = duration.formatted(
+//                    .time(pattern: .minuteSecond(padMinuteToLength: 2))
+//                )
+//                timerInString = format
+//
+//                let url = Bundle.main.url(forResource: "sound_effect_1", withExtension: "wav")
+//                
+//                if let url {
+//                    do {
+//                        if audioPlayer == nil {
+//                            audioPlayer = try AVAudioPlayer(contentsOf: url)
+//                        }
+//                    } catch {
+//                        
+//                    }
+//                }
+//                
+//            }
+//            .frame(width: proxy.size.width, height: proxy.size.height)
+//        }
+//        .ignoresSafeArea()
+//    }
+//}
+//
+//
