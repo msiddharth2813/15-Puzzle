@@ -45,7 +45,7 @@ class GameEngine: ObservableObject {
         16: [14, 15, 13],
     ]
     
-    let buttonCollumnMapping = [
+    let buttonColumnMapping = [
         1: [5, 9, 13],
         2: [6, 10, 14],
         3: [11, 7, 15],
@@ -115,37 +115,35 @@ class GameEngine: ObservableObject {
         }
         
         let rows = buttonRowMapping[buttonGridPostion] ?? []
-        let columns = buttonCollumnMapping[buttonGridPostion] ?? []
-
+        let columns = buttonColumnMapping[buttonGridPostion] ?? []
         var buttonPositionsToMove = [Int]()
-        var emptyButtonGridPostion = emptyButtonGridPostion
-        
+
         if rows.contains(emptyButtonGridPostion) {
+        // Button tapped position is in same row as empty button position
             if emptyButtonGridPostion < buttonGridPostion {
-                while emptyButtonGridPostion < buttonGridPostion {
-                    emptyButtonGridPostion += 1
-                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                for index in stride(from: emptyButtonGridPostion + 1, through: buttonGridPostion, by: 1) {
+                    buttonPositionsToMove.append(index)
                 }
             } else {
-                while emptyButtonGridPostion > buttonGridPostion {
-                    emptyButtonGridPostion -= 1
-                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                for index in stride(from: emptyButtonGridPostion - 1, through: buttonGridPostion, by: -1) {
+                    buttonPositionsToMove.append(index)
                 }
             }
         } else if columns.contains(emptyButtonGridPostion) {
+            // Button tapped position is in same column as empty button position
             if emptyButtonGridPostion < buttonGridPostion {
-                while emptyButtonGridPostion < buttonGridPostion {
-                    emptyButtonGridPostion += 4
-                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                for index in stride(from: emptyButtonGridPostion, through: buttonGridPostion, by: 4) {
+                    buttonPositionsToMove.append(index)
                 }
             } else {
-                while emptyButtonGridPostion > buttonGridPostion {
-                    emptyButtonGridPostion -= 4
-                    buttonPositionsToMove.append(emptyButtonGridPostion)
+                for index in stride(from: emptyButtonGridPostion, through: buttonGridPostion, by: -4) {
+                    buttonPositionsToMove.append(index)
                 }
             }
         }
+        
         print("buttonPositionsToMove = \(buttonPositionsToMove)")
+        
         if !buttonPositionsToMove.isEmpty {
             for indexToMove in buttonPositionsToMove {
                 if let buttonNumber = buttonGridMap[indexToMove] {

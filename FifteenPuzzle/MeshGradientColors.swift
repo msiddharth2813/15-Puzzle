@@ -17,33 +17,32 @@ struct MeshGradientColors {
     let color7: Color
     let color8: Color
     let color9: Color
-    let color10: Color
-    let color11: Color
-    let color12: Color
+
+    
     static var randomTheme = 0
     
-    func gradientColors() -> [Color] { return [color1, color2, color3, color4, color5, color6, color7, color8, color9, color10, color11, color12]
+    func gradientColors() -> [Color] { return [color1, color2, color3, color4, color5, color6, color7, color8, color9]
     }
     
     func playButtonColor() -> Color {
-        color4.mix(with: color12, by: 0.1)
+        color4.mix(with: color9, by: 0.1)
     }
     
-    static var blueTheme = MeshGradientColors.init(color1: .blue, color2: .blue, color3: .blue, color4: .cyan, color5: .cyan, color6: .cyan, color7: .green, color8: .green, color9: .green, color10: .mint, color11: .mint, color12: .mint)
+    static var blueTheme = MeshGradientColors.init(color1: .blue, color2: .blue, color3: .blue, color4: .teal, color5: .teal, color6: .teal, color7: .green, color8: .green, color9: .green)
     
-    static var purpleBlueTheme = MeshGradientColors.init(color1: .teal, color2: .teal, color3: .teal, color4: .cyan, color5: .cyan, color6: .cyan, color7: .purple, color8: .purple, color9: .purple, color10: .indigo, color11: .indigo, color12: .indigo)
+    static var purpleBlueTheme = MeshGradientColors.init(color1: .teal, color2: .teal, color3: .teal, color4: .cyan.mix(with: .indigo, by: 0.4), color5: .cyan.mix(with: .indigo, by: 0.4), color6: .cyan.mix(with: .indigo, by: 0.4), color7: .purple, color8: .purple, color9: .purple)
     
-    static var greenRed = MeshGradientColors.init(color1: .orange, color2: .orange, color3: .orange, color4: .yellow, color5: .yellow, color6: .yellow, color7: .mint, color8: .mint, color9: .mint, color10: .mint, color11: .mint, color12: .mint)
+    static var greenRed = MeshGradientColors.init(color1: .mint.mix(with: .green, by: 0.1), color2: .mint.mix(with: .green, by: 0.1), color3: .mint.mix(with: .green, by: 0.1), color4: .cyan, color5: .cyan, color6: .cyan, color7: .blue.mix(with: .cyan, by: 0.7), color8: .blue.mix(with: .cyan, by: 0.7), color9: .blue.mix(with: .cyan, by: 0.7))
     
-    static var yellowTheme = MeshGradientColors.init(color1: .yellow, color2: .yellow, color3: .yellow, color4: .yellow, color5: .yellow, color6: .yellow, color7: .orange, color8: .orange, color9: .orange, color10: .red, color11: .red, color12: .red)
+    static var yellowTheme = MeshGradientColors.init(color1: .yellow, color2: .yellow, color3: .yellow, color4: .orange, color5: .orange, color6: .orange, color7: .yellow.mix(with: .pink, by: 0.8), color8: .yellow.mix(with: .pink, by: 0.8), color9: .yellow.mix(with: .pink, by: 0.8))
     
-    static var yellowGreenTheme = MeshGradientColors.init(color1: .mint, color2: .mint, color3: .mint, color4: .green, color5: .green, color6: .green, color7: .yellow, color8: .yellow, color9: .yellow, color10: .orange, color11: .orange, color12: .orange)
+    static var yellowGreenTheme = MeshGradientColors.init(color1: .mint.mix(with: .green, by: 0.2), color2: .mint.mix(with: .green, by: 0.2), color3: .mint.mix(with: .green, by: 0.2), color4: .green.mix(with: .white, by: 0.3), color5: .green.mix(with: .white, by: 0.3), color6: .green.mix(with: .white, by: 0.3), color7: .yellow, color8: .yellow, color9: .yellow)
     
-    static var lightgreenTheme = MeshGradientColors.init(color1: .yellow.mix(with: .green, by: 0.5), color2: .yellow.mix(with: .green, by: 0.5), color3: .yellow.mix(with: .green, by: 0.5), color4: .green, color5: .green, color6: .green, color7: .mint.mix(with: .green, by: 0.5), color8: .mint.mix(with: .green, by: 0.5), color9: .mint.mix(with: .green, by: 0.5), color10: .green, color11: .green, color12: .green)
+    static var lightgreenTheme = MeshGradientColors.init(color1: .yellow.mix(with: .green, by: 0.2), color2: .yellow.mix(with: .green, by: 0.2), color3: .yellow.mix(with: .green, by: 0.2), color4: .yellow.mix(with: .green, by: 0.3), color5: .yellow.mix(with: .green, by: 0.3), color6: .yellow.mix(with: .green, by: 0.3), color7: .mint.mix(with: .green, by: 0.9), color8: .mint.mix(with: .green, by: 0.9), color9: .mint.mix(with: .green, by: 0.9))
     
-    static var pinkTheme = MeshGradientColors.init(color1: .pink.mix(with: .yellow, by: 0.5), color2: .pink.mix(with: .yellow, by: 0.5), color3: .pink.mix(with: .yellow, by: 0.5), color4: .pink.mix(with: .purple, by: 0.2), color5: .pink.mix(with: .purple, by: 0.2), color6: .pink.mix(with: .purple, by: 0.2), color7: .purple, color8: .purple, color9: .purple, color10: .indigo, color11: .indigo, color12: .indigo)
+    static var pinkTheme = MeshGradientColors.init(color1: .pink.mix(with: .yellow, by: 0.5), color2: .pink.mix(with: .yellow, by: 0.5), color3: .pink.mix(with: .yellow, by: 0.5), color4: .pink.mix(with: .orange, by: 0.2), color5: .pink.mix(with: .orange, by: 0.2), color6: .pink.mix(with: .orange, by: 0.2), color7: .purple.mix(with: .pink, by: 0.4), color8: .purple.mix(with: .pink, by: 0.4), color9: .purple.mix(with: .pink, by: 0.4))
     
-    static var yellowOrange = MeshGradientColors.init(color1: .yellow, color2: .yellow, color3: .yellow, color4: .orange, color5: .orange, color6: .orange, color7: .purple, color8: .purple, color9: .purple, color10: .pink, color11: .pink, color12: .pink)
+    static var yellowOrange = MeshGradientColors.init(color1: .pink.mix(with: .yellow, by: 0.2), color2: .pink.mix(with: .yellow, by: 0.2), color3: .pink.mix(with: .yellow, by: 0.2), color4: .orange.mix(with: .yellow, by: 0.1), color5: .orange.mix(with: .yellow, by: 0.1), color6: .orange.mix(with: .yellow, by: 0.1), color7: .yellow.mix(with: .white, by: 0.1), color8: .yellow.mix(with: .white, by: 0.1), color9: .yellow.mix(with: .white, by: 0.1))
     
     static func randomGradient() -> MeshGradientColors {
         randomTheme += 1

@@ -21,7 +21,7 @@ struct ContentView: View {
     @State var affect = 0
     @State var scale: CGFloat = 1
     @State var currentTimerSecond = 0
-    @State var showFirstImage = true
+    @State var blockPuzzle = true
     @State var timerInString = ""
     @State var hidePlayButtonView = false
     @State var showingAlert = false
@@ -51,7 +51,7 @@ struct ContentView: View {
                        Text("\(timerInString)")
                             .monospaced()
                             .font(.system(size: 42))
-                            .onReceive(timer) { _ in
+                          .onReceive(timer) { _ in
                                 guard playStarted else {
                                     return
                                 }
@@ -63,9 +63,11 @@ struct ContentView: View {
                                 timerInString = format
                             }
                             .font(.system(size: 40))
+                            .foregroundStyle(Color.black.opacity(0.7))                        
                         Group {
-                            if showFirstImage {
+                            if blockPuzzle {
                                 Image(systemName: "pause.fill")
+                                    .foregroundStyle(Color.black.opacity(0.7))
                                     .font(.system(size: 40))
                                     .gesture(
                                         TapGesture()
@@ -77,7 +79,7 @@ struct ContentView: View {
                                                     return
                                                 }
                                                 // Cancel on pause
-                                                showFirstImage.toggle()
+                                                blockPuzzle.toggle()
                                                 timer.upstream.connect().cancel()
                                                 hidePlayButtonView.toggle()
                                                 affect += 1
@@ -87,12 +89,13 @@ struct ContentView: View {
                             }
                             else {
                                 Image(systemName: "play.fill")
+                                    .foregroundStyle(Color.black.opacity(0.7))
                                     .font(.system(size: 40))
                                     .gesture(
                                         TapGesture()
                                             .onEnded { _ in
                                                 // Restart on continue
-                                                showFirstImage.toggle()
+                                                blockPuzzle.toggle()
                                                 timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
                                                 hidePlayButtonView.toggle()
                                                 affect += 1
@@ -145,7 +148,7 @@ struct ContentView: View {
                                             .monospaced()
                                     }
                                     .alert("Puzzle Solved", isPresented: $showingAlert) {
-                                        Button("Play Again😉", role: .cancel) {
+                                        Button("Play Again 😃", role: .cancel) {
                                             guard playStarted else {
                                                 return
                                             }
@@ -281,73 +284,3 @@ struct ContentView: View {
         .ignoresSafeArea()
     }
 }
-
-//struct ContentView: View {
-//
-//    let totalCellCount = 16
-//    let gridSpacing: CGFloat = 8
-//
-//    @Environment(\.scenePhase) var scenePhase
-//
-//    @State var startDate = Date.now
-//    @State var cellWidth: CGFloat = 0
-//    @State var affect = 0
-//    @State var scale: CGFloat = 1
-//    @State var currentTimerSecond = 0
-//    @State var showFirstImage = true
-//    @State var timerInString = ""
-//    @State var hidePlayButtonView = false
-//    @State var showingAlert = false
-//    @State var playStarted = false
-//    @State var currentTheme: MeshGradientColors = .randomGradient()
-//    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-//    @State var audioPlayer: AVAudioPlayer?
-//
-//    @ObservedObject var gameEngine = GameEngine(size: CGSize.zero)
-//        
-//    var body: some View {
-//        GeometryReader { proxy in
-//        ZStack {
-//            ForEach(1...totalCellCount, id: \.self) { position in
-//                Rectangle()
-//                    .fill(Color.black.opacity(0.1))
-//                    .cornerRadius(15)
-//                    .frame(width: cellWidth, height: cellWidth)
-//                    .position(gameEngine.fillRectanglePositions[position] ?? .zero)
-//            }
-//        }
-//        .padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0))
-//        .onAppear {
-//            let padding: CGFloat = (2 * 20) + (3 * gridSpacing)
-//            cellWidth = (proxy.size.width - padding)/4
-//            gameEngine.updateScreenSize(size: proxy.size)
-//        }
-//        .frame(width: proxy.size.width, height: 400)
-//        .onAppear {
-//                print("MANIII  proxy=\(proxy.size)")
-//                let duration = Duration.seconds(currentTimerSecond)
-//                let format = duration.formatted(
-//                    .time(pattern: .minuteSecond(padMinuteToLength: 2))
-//                )
-//                timerInString = format
-//
-//                let url = Bundle.main.url(forResource: "sound_effect_1", withExtension: "wav")
-//                
-//                if let url {
-//                    do {
-//                        if audioPlayer == nil {
-//                            audioPlayer = try AVAudioPlayer(contentsOf: url)
-//                        }
-//                    } catch {
-//                        
-//                    }
-//                }
-//                
-//            }
-//            .frame(width: proxy.size.width, height: proxy.size.height)
-//        }
-//        .ignoresSafeArea()
-//    }
-//}
-//
-//
